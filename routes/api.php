@@ -1,5 +1,10 @@
 <?php
 
+use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookDetailController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\UserController;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\BookDetail;
@@ -11,17 +16,21 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::apiResource('authors',Author::class);
+Route::post('register',[UserController::class,'register']);
+Route::post('login',[UserController::class,'login']);
+Route::post('logout',[UserController::class,'logout'])->middleware('auth:sanctum');
+
+Route::apiResource('authors',AuthorController::class)->middleware('auth:sanctum');
 Route::get('authors/{id}/books',[Author::class,'getBooks']);
 
-Route::apiResource('books',Book::class);
-Route::get('books/{id}/details',[Book::class,'getBookDetails']);
-Route::get('books/{id}/categories',[Book::class,'getCategories']);
+Route::apiResource('books',BookController::class);
+Route::get('books/{id}/details',[BookController::class,'getBookDetails']);
+Route::get('books/{id}/categories',[BookController::class,'getCategories']);
 
-Route::apiResource('categories',Category::class);
-Route::get('categories/{id}/books',[Category::class,'getBooks']);
-Route::post('categories/{id}/books',[Category::class,'addBooks']);
+Route::apiResource('categories',CategoryController::class);
+Route::get('categories/{id}/books',[CategoryController::class,'getBooks']);
+Route::post('categories/{id}/books',[CategoryController::class,'addBooks']);
 
-Route::post('book-details',[BookDetail::class,'store']);
-Route::put('book-details/{id}',[BookDetail::class,'update']);
-Route::delete('book-detail/{id}',[BookDetail::class,'destroy']);
+Route::post('book-details',[BookDetailController::class,'store']);
+Route::put('book-details/{id}',[BookDetailController::class,'update']);
+Route::delete('book-detail/{id}',[BookDetailController::class,'destroy']);
